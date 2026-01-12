@@ -1,8 +1,3 @@
-<?php
-include '../includes/header.inc.php';
-include '../includes/navbar.inc.php';
-?>
-
 
 <h3 style="text-align: center; font-weight: bold; color: white;">Login Page</h3>
 <form class="col-md-8 col-lg-6 mx-auto"> 
@@ -22,6 +17,3 @@ include '../includes/navbar.inc.php';
     <button style="text-align: center;" type="submit" class="btn btn-primary">Submit</button>
 </form>
 
-<?php
-include '../includes/footer.inc.php';
-?>
