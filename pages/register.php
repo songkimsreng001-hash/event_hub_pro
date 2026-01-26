@@ -2,10 +2,10 @@
 $nameErr = $usernameErr = '';
 $name = $username = '';
     if (isset($_POST['name'], $_POST['username'], $_POST['password'], $_POST['confirm_password'])) {
-        $name = ($_POST['name']);
-        $username = ($_POST['username']);
-        $password = $_POST['password'];
-        $confirm_password = $_POST['confirm_password'];
+        $name = trim($_POST['name']);
+        $username = trim($_POST['username']);
+        $password = trim($_POST['password']);
+        $confirm_password = trim($_POST['confirm_password']);
 
         // Basic validation
        
@@ -21,6 +21,26 @@ $name = $username = '';
          if (empty($confirm_password)) {
             $confirmPasswordErr ='Please input confirm your password.';
         } 
+        if ($password !== $confirm_password) {
+            $confirmPasswordErr = 'Password does not match.';
+        }
+        if ($usernameExists($username)) {
+            $usernameErr = 'Please choose a different username.';
+        }
+        if (empty($nameErr) && empty($usernameErr) && empty($passwordErr)) {
+            if (registerUser($name, $username, $password)) {
+                // Clear form values after successful registration
+              $name = $username = '';
+                echo '<div class="alert alert-success" role="alert">
+                Registration successful! You can now <a href="./?page=login" class="alert-link">login</a>.
+              </div>';
+              
+            } else {
+                echo '<div class="alert alert-danger" role="alert">
+                Registration failed! Please try again later.
+              </div>';
+            }
+        }
     }
 ?>
 
