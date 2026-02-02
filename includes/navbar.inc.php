@@ -19,21 +19,17 @@
           </a>
           <ul class="dropdown-menu">
             <?php if (empty($user)) { ?>
-            <li><a class="dropdown-item" href="/WebApp1/?page=login">Login</a>
-            </li>
-            <li>
-            <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item" href="/WebApp1/?page=register">Register</a>
-            </li>
+              <li><a class="dropdown-item" href="/WebApp1/?page=login">Login</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="/WebApp1/?page=register">Register</a></li>
             <?php } else { ?>
               <li><a class="dropdown-item" href="/WebApp1/?page=logout">Logout</a>
               <?php } ?>
           </ul>
         </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-        </li>
+        <li class="nav-item"><a class="nav-link disabled" aria-disabled="true">Disabled</a></li>
       </ul>
       <form class="d-flex" role="search" data-bs-target="dark">
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
