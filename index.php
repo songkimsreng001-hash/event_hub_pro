@@ -24,4 +24,4 @@ if (in_array($page, $available_pages)) {
     //header('Location: ./?page=login');
     header('Location: ./?page=dashboard');
 }
-?>
+include './includes/footer.inc.php';
