@@ -1,20 +1,20 @@
 <?php
 $nameErr = $usernameErr = '';
 $name = $username = '';
-if (isset($_POST['username'], $_POST['password'])) {
+if (isset($_POST['username'], $_POST['passwd'])) {
     $username = trim($_POST['username']);
-    $password = trim($_POST['password']);
+    $passwd = trim($_POST['passwd']);
 
 
 
     if (empty($username)) {
         $usernameErr = 'Please input your username.';
     }
-    if (empty($password)) {
-        $passwordErr = 'Please input your password';
+    if (empty($passwd)) {
+        $passwdErr = 'Please input your password';
     }
-    if (empty($usernameErr) && empty($passwordErr)) {
-        $user = logUserIn($username, $password);
+    if (empty($usernameErr) && empty($passwdErr)) {
+        $user = logUserIn($username, $passwd);
         if ($user && is_object($user)) {
             $_SESSION['user_id'] = $user->id;
             header('Location: ./?page=dashboard');
@@ -35,9 +35,9 @@ if (isset($_POST['username'], $_POST['password'])) {
             </div>
             <div class="mb-3">
                 <label class="form-label" style="font-weight: bold; color: white;">Password</label>
-                <input name="password" type="password" class="form-control
-        <?php echo empty($passwordErr) ? '' : 'is-invalid'; ?>">
-                <div class="invalid-feedback"><?php echo $passwordErr ?? ''; ?>
+                <input name="passwd" type="password" class="form-control
+        <?php echo empty($passwdErr) ? '' : 'is-invalid'; ?>">
+                <div class="invalid-feedback"><?php echo $passwdErr ?? ''; ?>
                 </div>
                 <button style="text-align: center;" type="submit" class="btn btn-primary">Submit</button>
 </form>

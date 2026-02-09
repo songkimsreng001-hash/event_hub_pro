@@ -15,20 +15,20 @@ if (isset($_POST['name'], $_POST['username'], $_POST['password'], $_POST['confir
     if (empty($username)) {
         $usernameErr = 'Please input your username.';
     }
-    if (empty($password)) {
+    if (empty($passwd)) {
         $passwordErr = 'Please input your password';
     }
     if (empty($confirm_password)) {
-        $confirmPasswordErr = 'Please input confirm your password.';
+        $confirmPasswdErr = 'Please input confirm your password.';
     }
-    if ($password !== $confirm_password) {
-        $confirmPasswordErr = 'Password does not match.';
+    if ($passwd !== $confirm_password) {
+        $confirmPasswdErr = 'Password does not match.';
     }
     if ($usernameExists($username)) {
         $usernameErr = 'Please choose a different username.';
     }
-    if (empty($nameErr) && empty($usernameErr) && empty($passwordErr)) {
-        if (registerUser($name, $username, $password)) {
+    if (empty($nameErr) && empty($usernameErr) && empty($confirmPasswdErr)) {
+        if (registerUser($name, $username, $passwd)) {
             // Clear form values after successful registration
             $name = $username = '';
             echo '<div class="alert alert-success" role="alert">
@@ -59,16 +59,17 @@ if (isset($_POST['name'], $_POST['username'], $_POST['password'], $_POST['confir
         <div class="invalid-feedback"><?php echo $usernameErr ?? ''; ?>
         </div>
         <div class="mb-3">
-        <label class="form-label" style="font-weight: bold; color: white;">Password</label>
-        <input name="password" type="password" class="form-control
-        <?php echo empty($passwordErr) ? '' : 'is-invalid'; ?>">
-        <div class="invalid-feedback"><?php echo $passwordErr ?? ''; ?>
+            <label class="form-label" style="font-weight: bold; color: white;">Password</label>
+            <input name="passwd" type="password" class="form-control
+            <?php echo empty($passwdErr) ? '' : 'is-invalid'; ?>">
+            <div class="invalid-feedback"><?php echo $passwdErr ?? ''; ?>
         </div>
-                <div class="mb-3">
-                    <label class="form-label" style="font-weight: bold; color: white;">Confirm Password</label>
-                    <input name="Confirm_password" type="password" class="form-control
-        <?php echo empty($confirmPasswordErr) ? '' : 'is-invalid'; ?>">
-                    <div class="invalid-feedback"><?php echo $confirmPasswordErr ?? ''; ?>
-                    </div>
-                    <button style="text-align: center;" type="submit" class="btn btn-primary">Submit</button>
+            <div class="mb-3">
+                <label class="form-label" style="font-weight: bold; color: white;">Confirm Password</label>
+                <input name="confirm_passwd" type="password" class="form-control
+                 <?php echo empty($confirmPasswdErr) ? '' : 'is-invalid'; ?>">
+            <div class="invalid-feedback">
+                <?php echo $confirmPasswdErr ?? ''; ?>
+            </div>
+                <button style="text-align: center;" type="submit" class="btn btn-primary">Submit</button>
 </form>

@@ -13,20 +13,20 @@ function usernameExists($username) {
 
 
 
-function registerUser($name, $username, $password) {
+function registerUser($name, $username, $passwd) {
     global $db;
-    $query = $db->prepare('INSERT INTO tbl_users (name, username, password) VALUES (?, ?, ?)');
-    $query->bind_param('sss', $name, $username, $Password);
+    $query = $db->prepare('INSERT INTO tbl_users (name, username, passwd) VALUES (?, ?, ?)');
+    $query->bind_param('sss', $name, $username, $passwd);
     $query->execute();
     if ($query->affected_rows) {
         return true;
     }
     return false;
 }
-function logUserIn($username, $password) {
+function logUserIn($username, $passwd) {
     global $db;
-    $query = $db->prepare('SELECT * FROM tbl_users WHERE username = ? AND password = ?');
-    $query->bind_param('ss', $username, $password);
+    $query = $db->prepare('SELECT * FROM tbl_users WHERE username = ? AND passwd = ?');
+    $query->bind_param('ss', $username, $passwd);
     $query->execute();
     if ($query->affected_rows) {
         return true;
@@ -36,16 +36,47 @@ function logUserIn($username, $password) {
 
 function loggedInUser() {
     global $db;
-    if (isset($_SESSION['user_id'])) {
+    if (!isset($_SESSION['user_id'])) {
         return null;
-        }
-        $user_id = $_SESSION['user_id'];
-        $query = $db->prepare('SELECT * FROM tbl_users WHERE id = ?');
-        $query->bind_param('d', $user_id);
-        $query->execute();
-        $result = $query->get_result();
-        if ($result->num_rows) {
-            return $result->fetch_object();
+    }
+
+    $user_id = $_SESSION['user_id'];
+    $query = $db->prepare("SELECT * FROM tbl_users WHERE id = ?");
+    $query->bind_param("i", $user_id);
+    $query->execute();
+    $result = $query->get_result();
+    if ($result && $result->num_rows) {
+        return $result->fetch_object();
     }
     return null;
+}
+function isAdmin() {
+    $user = loggedInUser();
+    if ($user && $user->is_admin) {
+        return true;
+    }
+    return false;
+}
+function isUserHasPassword($passwd) {
+    global $db;
+    $user = loggedInUser();
+    $query = $db->prepare('SELECT * FROM tbl_users WHERE id = ? AND passwd = ?');
+    $query->bind_param('ss', $user->id, $passwd);
+    $query->execute();
+    $result = $query->get_result();
+    if ($result->num_rows) {
+        return true;
+    }
+    return false;
+}
+function setUserNewPassword($passwd) {
+    global $db;
+    $user = loggedInUser();
+    $query = $db->prepare('UPDATE tbl_users SET passwd = ? WHERE id = ?');
+    $query->bind_param('sd', $passwd, $user->id);
+    $query->execute();
+    if ($query->affected_rows) {
+        return true;
+    }
+    return false;
 }
