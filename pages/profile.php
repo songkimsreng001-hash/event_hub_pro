@@ -1,73 +1,111 @@
+
 <?php
-$oldPasswd = $newPasswd = $confirmPasswd = '';
+$oldPasswd = $newPasswd = $confirmNewPasswd = '';
 $oldPasswdErr = $newPasswdErr = '';
 
-if (isset($_POST['changePasswd'], $_POST['oldPasswd'], $_POST['newPasswd'], $_POST['confirmPasswd'])) {
+if (isset($_POST['changePasswd'], $_POST['oldPasswd'], $_POST['newPasswd'], $_POST['confirmNewPasswd'])) {
     $oldPasswd = trim($_POST['oldPasswd']);
     $newPasswd = trim($_POST['newPasswd']);
-    $confirmPasswd = trim($_POST['confirmPasswd']);
-
+    $confirmNewPasswd = trim($_POST['confirmNewPasswd']);
     if (empty($oldPasswd)) {
-        $oldPasswdErr = 'Please input your old password.';
+        $oldPasswdErr = 'please input your old password';
     }
     if (empty($newPasswd)) {
-        $newPasswdErr = 'Please input your new password.';
+        $newPasswdErr = 'please input your new password';
     }
-    if (empty($confirmPasswd)) {
-        $newPasswdErr = 'Please confirm your new password.';
-    }
-    if ($newPasswd !== $confirmPasswd) {
-        $newPasswdErr = 'Password is incorrect.';
-    }
-    if (empty($oldPasswdErr) && empty($newPasswdErr)) {
-        if (setUserNewPassword($newPasswd)) {
-            header('Location: ./?page=logout');
-        } else {
-            echo '<div class="alert alert-danger" role="alert">Try again.</div>';
+    if ($newPasswd !== $confirmNewPasswd) {
+        $newPasswdErr = 'password does not match';
+    } else {
+        if (!isUserHasPassword($oldPasswd)) {
+            $oldPasswdErr = 'password is incorrect';
         }
     }
+    if (empty($oldPasswdErr) && empty($newPasswdErr)) {
+        if (setUserNewPassowrd($newPasswd)) {
+            unset($_SESSION['user_id']);
+            echo '<div class="alert alert-success" role="alert">
+                password changed successfully. <a href="./?page=login">click here</a> to login again.
+                </div>';
+        } else {
+            echo '<div class="alert alert-danger" role="alert">
+                try aggain.
+                </div>';
+        }
+    }
+}
+
+
+if (isset($_POST['uploadPhoto']) && isset($_FILES['photo'])) {
+    $photo = $_FILES['photo'];
+    if (empty($photo['name'])) {
+        echo '<div class="alert alert-danger" role="alert">
+            Please select a photo to upload.
+            </div>';
+    } else {
+        try {
+            if (changeProfileImage($photo)) {
+                echo '<div class="alert alert-success" role="alert">
+                    profile image changed successfully.
+                    </div>';
+            } else {
+                echo '<div class="alert alert-danger" role="alert">
+                    failed to change profile image.
+                    </div>';
+            }
+        } catch (Exception $e) {
+            echo '<div class="alert alert-danger" role="alert">
+                ' . $e->getMessage() . '
+                </div>';
+        }
+    }
+}
+
+if (isset($_POST['deletePhoto'])) {
+    deleteProfileImage();
 }
 ?>
 
 <div class="row">
-    <div class="col-lg-6">
-        <h3 style="text-align: center; font-weight: bold; color: white;">Profile Page</h3>
-        <form method="post" action="./?page=profile">
-            <div class="d-flex flex-column align-items-center">
+    <div class="col-6">
+        <form method="post" action="./?page=profile" enctype="multipart/form-data">
+            <div class="d-flex justify-content-center">
                 <input name="photo" type="file" id="profileUpload" hidden>
-                <label for="profileUpload" class="d-flex flex-column align-items-center">
-                    <img src=".assets/images/Profile_PNG.png" class="rounded">
+                <label role="button" for="profileUpload">
+                    <img src="<?php echo loggedInUser()->photo ?? './assets/images/emptyuser.png' ?>"
+                        class="rounded img-thumbnail" style="max-width:200px">
+                </label>
+            </div>
+            <div class="d-flex justify-content-center">
+                <button type="submit" name="deletePhoto" class="btn btn-danger">Delete</button>
+                <button type="submit" name="uploadPhoto" class="btn btn-success">Upload</button>
+            </div>
+        </form>
     </div>
-    <div class="d-flex justify-content-center">
-        <button type="submit" name="deletePhoto" class="btn btn-danger">Delete</button>
-        <button type="submit" name="uploadPhoto" class="btn btn-success ms-2">Upload</button>
 
+    <div class="col-6">
+        <form method="post" action="./?page=profile" class="col-md-8 col-lg-6 mx-auto">
+            <h3>Change Password</h3>
+            <div class="mb-3">
+                <label class="form-label">Old Password</label>
+                <input value="<?php echo $oldPasswd ?>" name="oldPasswd" type="password" class="form-control 
+                <?php echo empty($oldPasswdErr) ? '' : 'is-invalid' ?>">
+                <div class="invalid-feedback">
+                    <?php echo $oldPasswdErr ?>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">New Password</label>
+                <input name="newPasswd" type="password" class="form-control 
+                <?php echo empty($newPasswdErr) ? '' : 'is-invalid' ?>">
+                <div class="invalid-feedback">
+                    <?php echo $newPasswdErr ?>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Confirm New Password</label>
+                <input name="confirmNewPasswd" type="password" class="form-control">
+            </div>
+            <button type="submit" name="changePasswd" class="btn btn-primary">Change Password</button>
+        </form>
     </div>
-</div>
-
-<div class="col-6">
-    <form method="post" action="./?page=profile" class="col-md-8 col-lg-6 mx-auto">
-        <div class="mb-3">
-            <label class="form-label" style="font-weight: bold; color: white;">Old Password</label>
-            <input value="<?php echo $oldPasswd ?>" type="password" class="form-control
-            <?php echo empty($oldPasswdErr) ? '' : 'is-invalid'; ?>">
-            <div class="invalid-feedback">
-            <?php echo $oldPasswdErr ?? ''; ?>
-            </div>
-        </div>
-        <div class="mb-3">
-            <label class="form-label" style="font-weight: bold; color: white;">New Password</label>
-            <input name="newPasswd" type="password" class="form-control
-            <?php echo empty($newPasswdErr) ? '' : 'is-invalid'; ?>">
-            <div class="invalid-feedback">
-            <?php echo $newPasswdErr ?? ''; ?>
-            </div>
-        </div>
-        <div class="mb-3">
-            <label class="form-label" style="font-weight: bold; color: white;">Confirm New Password</label>
-            <input name="confirmPasswd" type="password" class="form-control">
-            </div>
-        </div>
-        <button type="submit" name="changePasswd" class="btn btn-primary">Change Password</button>
-    </form>
 </div>
