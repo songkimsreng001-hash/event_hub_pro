@@ -6,4 +6,4 @@
     echo 'LEVEL: '. (isAdmin() ? 'ADMIN':'USER');
 ?>
 
-<h1>Dashboard</h1>
+<h1 style="font-weight: bold; text-align: center;">Dashboard</h1>

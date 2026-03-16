@@ -1,4 +1,3 @@
-
 <?php
 $nameErr = $usernameErr = $passwdErr = '';
 $name = $username = '';
@@ -9,26 +8,32 @@ if (isset($_POST['name'], $_POST['username'], $_POST['passwd'], $_FILES['photo']
     $username = trim($_POST['username']);
     $passwd = trim($_POST['passwd']);
     if (empty($name)) {
-        $nameErr = 'please input name!';
+        $nameErr = 'Please input name!';
     }
     if (empty($username)) {
-        $usernameErr = 'please input username!';
+        $usernameErr = 'Please input username!';
     }
     if (empty($passwd)) {
-        $passwdErr = 'please input password!';
+        $passwdErr = 'Please input password!';
     }
     if (usernameExists($username)) {
-        $usernameErr = 'please choose another username !';
+        $usernameErr = 'Please choose another username !';
     }
     if (empty($nameErr) && empty($usernameErr) && empty($passwdErr)) {
-        if (createUser($name, $username, $passwd, $photo)) {
-            $name = $username = '';
-            echo '<div class="alert alert-success" role="alert">
-            Create successful!
+        try {
+            if (createUser($name, $username, $passwd, $photo)) {
+                $name = $username = '';
+                echo '<div class="alert alert-success" role="alert">
+            Create successful! <a href="./?page=user/list">go to list</a>
             </div>';
-        } else {
-            echo '<div class="alert alert-danger" role="alert">
+            } else {
+                echo '<div class="alert alert-danger" role="alert">
             Create failed! Please try again.
+            </div>';
+            }
+        } catch (Exception $e) {
+            echo '<div class="alert alert-danger" role="alert">
+            ' . $e->getMessage() . '
             </div>';
         }
     }
@@ -37,11 +42,11 @@ if (isset($_POST['name'], $_POST['username'], $_POST['passwd'], $_FILES['photo']
 
 
 <form method="post" action="./?page=user/create" enctype="multipart/form-data" class="col-md-10 col-lg-6 mx-auto">
-    <h3>Create User</h3>
+    <h3 style="font-weight: bold; text-align: center;">Create User</h3>
     <div class="d-flex justify-content-center">
         <input name="photo" type="file" id="profileUpload" hidden>
         <label role="button" for="profileUpload">
-            <img src="./assets/images/emptyuser.png" class="rounded img-thumbnail" style="max-width:200px">
+            <img src="./assets/images/Profile_PNG.png" class="rounded img-thumbnail" style="max-width:200px">
         </label>
     </div>
     <div class="mb-3">
