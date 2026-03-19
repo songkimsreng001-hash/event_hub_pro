@@ -3,7 +3,7 @@
         <h3 class="fw-bold m-0">Users List</h3>
 
         <a href="./?page=user/create" role="button" class="btn btn-success">
-            Create
+            Create New
         </a>
     </div>
 
