@@ -15,9 +15,7 @@ function createUser($name, $username, $passwd, $photo)
         return true;
     }
     return false;
-}
-
-function getUsers()
+}function getUsers()
 {
     global $db;
     $query = $db->prepare('SELECT * FROM tbl_users WHERE level <> "admin"');
@@ -25,22 +23,22 @@ function getUsers()
     $result = $query->get_result();
     return $result;
 }
-function readUser($id)
-{
+
+function readUser($id){
     global $db;
-    $query = $db->prepare('SELECT * FROM tbl_users WHERE id=?');
+    $query = $db->prepare('SELECT * FROM tbl_users WHERE id = ?');
     $query->bind_param('i', $id);
     $query->execute();
     $result = $query->get_result();
-    if ($result->num_rows > 0) {
+    if($result->num_rows > 0){
         return $result->fetch_object();
     }
     return null;
 }
-function deleteUser($id)
-{
+
+function deleteUser($id){
     global $db;
-    $query = $db->prepare('DELETE FROM tbl_users WHERE id=?');
+    $query = $db->prepare('DELETE FROM tbl_users WHERE id = ?');
     $query->bind_param('i', $id);
     $query->execute();
     if ($db->affected_rows) {
@@ -48,6 +46,7 @@ function deleteUser($id)
     }
     return false;
 }
+
 function updateUser($id, $name, $username, $passwd, $photo)
 {
     global $db;
@@ -87,4 +86,5 @@ function updateUser($id, $name, $username, $passwd, $photo)
     }
     return false;
 }
+
 ?>

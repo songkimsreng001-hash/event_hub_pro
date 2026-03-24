@@ -30,13 +30,13 @@ if (isset($_POST['name'], $_POST['username'], $_POST['passwd'], $_FILES['photo']
         try {
             if (updateUser($id, $name, $username, $passwd, $photo)) {
                 echo '<div class="alert alert-success" role="alert">
-                Update Name and Username successful! <a href="./?page=user/list">go to list
+                Update Name and Username successful! <a href="./?page=user/list">Go to list
                 </a>
             </div>';
             } else {
                 if (updateUser($id, $name, $username, $passwd, $photo)) {
                     echo '<div class="alert alert-success" role="alert">
-                    Update Name, Username and Password successful! <a href="./?page=user/list">go to list
+                    Update Name, Username and Password successful! <a href="./?page=user/list">Go to list
                     </a>
                 </div>';
                 }
@@ -63,21 +63,35 @@ if (isset($_POST['name'], $_POST['username'], $_POST['passwd'], $_FILES['photo']
     </div>
     <div class="mb-3">
         <label class="form-label">Name</label>
-        <input name="name" value="<?php echo $name ?>" type="text" class="form-control
-        <?php echo empty($nameErr) ? '' : 'is-invalid' ?>">
-        <div class="invalid-feedback"><?php echo $nameErr ?></div>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Username</label>
-        <input name="username" value="<?php echo $username ?>" type="text" class="form-control
-        <?php echo empty($usernameErr) ? '' : 'is-invalid' ?>">
-        <div class="invalid-feedback"><?php echo $usernameErr ?></div>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Password</label>
-        <input name="passwd" type="password" class="form-control
-        <?php echo empty($passwdErr) ? '' : 'is-invalid' ?>">
-        <div class="invalid-feedback"><?php echo $passwdErr ?></div>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="input-group">
+            <span class="input-group-text">
+                <i class="bi bi-person-fill"></i>
+            </span>
+            <input name="name" value="<?php echo $name ?>" type="text" class="form-control
+                <?php echo empty($nameErr) ? '' : 'is-invalid' ?>">
+            <div class="invalid-feedback"><?php echo $nameErr ?></div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Username</label>
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="bi bi-person-fill"></i>
+                </span>
+                <input name="username" value="<?php echo $username ?>" type="text" class="form-control
+                    <?php echo empty($usernameErr) ? '' : 'is-invalid' ?>">
+                <div class="invalid-feedback"><?php echo $usernameErr ?></div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-person-lock"></i>
+                    </span>
+                    <input name="passwd" type="password" class="form-control
+                        <?php echo empty($passwdErr) ? '' : 'is-invalid' ?>">
+                    <div class="invalid-feedback"><?php echo $passwdErr ?></div>
+                </div>
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
 </form>
