@@ -1,16 +1,12 @@
 <?php
-$id = $_GET['id'];
-$targetUser = readUser($id);
-if ($targetUser == null || $targetUser->level == 'admin') {
-    header('Location: ./?page=user/list');
-}else {
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+if ($id && $isAdmin) {
     if (deleteUser($id)) {
-        echo '<div class="alert alert-success" role="alert">
-        Delete successful! <a href="./?page=user/list">go to list</a>
-        </div>';
+        setFlash('success', 'User account and registrations have been removed.', 'User Deleted');
     } else {
-        echo '<div class="alert alert-danger" role="alert">
-        Delete failed! Please try again.
-        </div>';
+        setFlash('error', 'Cannot delete user. Admin accounts cannot be deleted.', 'Error');
     }
 }
+
+redirect('./?page=user/list');

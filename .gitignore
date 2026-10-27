@@ -1,1 +1,23 @@
-assets/images/
+# EventHub Pro - Git Ignore Rules
+
+# Temporary and local upload files
+assets/images/PI-*
+assets/images/EI-*
+*.tmp
+*.log
+
+# Keep default core assets
+!assets/images/Event_mgt_logo.jpg
+!assets/images/Profile_PNG.png
+!assets/images/loading.png
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
