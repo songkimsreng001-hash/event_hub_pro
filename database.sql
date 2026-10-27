@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `tbl_users` (
   `username` VARCHAR(50) NOT NULL UNIQUE,
   `passwd` VARCHAR(255) NOT NULL,
   `level` ENUM('admin', 'user') NOT NULL DEFAULT 'user',
-  `photo` VARCHAR(255) DEFAULT NULL,
+  `photo` MEDIUMTEXT DEFAULT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `tbl_events` (
   `location` VARCHAR(150) NOT NULL,
   `event_date` DATETIME NOT NULL,
   `capacity` INT NOT NULL DEFAULT 50,
-  `image` VARCHAR(255) DEFAULT NULL,
+  `image` MEDIUMTEXT DEFAULT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

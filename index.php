@@ -49,6 +49,12 @@ $available_pages = array_merge(
 );
 
 $page = $_GET['page'] ?? '';
+if (empty($page) && isset($_SERVER['REQUEST_URI'])) {
+    $uriPath = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '', '/');
+    if (!empty($uriPath) && !str_starts_with($uriPath, 'assets') && !str_starts_with($uriPath, 'api') && $uriPath !== 'index.php') {
+        $page = $uriPath;
+    }
+}
 
 // Support URL aliases for clean routes and backwards compatibility
 $aliases = [

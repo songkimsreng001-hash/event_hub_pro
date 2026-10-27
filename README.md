@@ -52,6 +52,8 @@ A modern, full-featured Event Management web application crafted with **PHP 8 (O
 
 ```
 Event_mgt/
+├── api/
+│   └── index.php                   # Vercel serverless function entrypoint
 ├── assets/
 │   ├── css/
 │   │   └── style.css               # Clean custom styling (scrollbar, sidebar collapsed, cropper, transitions)
@@ -71,10 +73,10 @@ Event_mgt/
 │   └── sidebar.inc.php             # Admin sidebar layout with navigation, badges & theme/lang switchers
 ├── index.php                       # Front controller & dual layout renderer
 ├── init/
-│   ├── db.init.php                 # MySQLi connection & connection fallback screen
+│   ├── db.init.php                 # MySQLi connection (supports local XAMPP & Cloud/Vercel ENV)
 │   ├── init.php                    # App initialization, sessions, flash messages, helpers
 │   └── func/
-│       ├── auth.func.php           # Authentication, password change, image upload
+│       ├── auth.func.php           # Authentication, password change, image upload (with Base64 serverless fallback)
 │       ├── event.func.php          # Event CRUD, registrations, statistics
 │       └── user.func.php           # User management CRUD
 ├── pages/
@@ -100,6 +102,8 @@ Event_mgt/
 │       ├── delete.php              # Admin delete user handler
 │       ├── list.php                # Admin member list & search
 │       └── update.php              # Admin edit user form (with 1:1 avatar Cropper)
+├── vercel.json                     # Vercel deployment configuration & static assets routing
+├── .vercelignore                   # Vercel deployment exclusions
 └── README.md                       # Project documentation
 ```
 
@@ -132,3 +136,57 @@ http://localhost/Event_mgt/
 | :--- | :--- | :--- | :--- |
 | **Administrator** | `admin` | `admin123` | Full Admin Access (Events, Approvals, Users, Sidebar) |
 | **Standard User** | `janedoe` | `admin123` | Member Access (Explore, Register, Profile, My Bookings) |
+
+---
+
+## ☁️ Deploying to Vercel
+
+This project is pre-configured with `vercel.json` and a serverless entrypoint (`api/index.php`) utilizing the `vercel-php` runtime.
+
+### Step 1: Set Up a Remote Cloud MySQL Database
+Since Vercel is a serverless environment without a local database, create a free cloud MySQL instance on any provider:
+- [TiDB Cloud](https://tidbcloud.com/) (Free Serverless MySQL)
+- [Aiven for MySQL](https://aiven.io/) (Free tier)
+- [Railway](https://railway.app/) (MySQL template)
+- [Clever Cloud](https://www.clever-cloud.com/)
+
+Import the schema by executing the contents of [`database.sql`](./database.sql) into your remote database.
+
+### Step 2: Configure Environment Variables in Vercel
+In your Vercel Project Dashboard (**Settings &rarr; Environment Variables**), add:
+
+| Key | Description | Example |
+| :--- | :--- | :--- |
+| `DB_HOST` | Remote MySQL Hostname | `gateway01.ap-southeast-1.prod.aws.tidbcloud.com` |
+| `DB_NAME` | Database Name | `event_mgt` |
+| `DB_USER` | MySQL Username | `xxxxxx.root` |
+| `DB_PASS` | MySQL Password | `your_secret_password` |
+| `DB_PORT` | MySQL Port | `3306` (or `4000` for TiDB) |
+| `DB_SSL` | Enable SSL for remote connection | `true` |
+
+*(Alternatively, you can provide a single `DATABASE_URL` string e.g. `mysql://user:pass@host:3306/event_mgt`)*
+
+### Step 3: Deploy to Vercel
+
+#### Method A: Deploy via GitHub (Recommended)
+1. Push your project to a GitHub repository.
+2. Go to [vercel.com](https://vercel.com/) and click **Add New &rarr; Project**.
+3. Import your GitHub repository.
+4. Add the **Environment Variables** from Step 2.
+5. Click **Deploy**. Vercel will build the project and assign a production URL.
+
+#### Method B: Deploy via Vercel CLI
+```bash
+# 1. Install Vercel CLI (if not installed)
+npm install -g vercel
+
+# 2. Login to Vercel
+vercel login
+
+# 3. Deploy
+vercel
+
+# 4. Deploy to production
+vercel --prod
+```
+

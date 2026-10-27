@@ -172,9 +172,18 @@ function uploadImage($image)
     $new_image_name = uniqid("PI-") . '.' . $image_lowercase_ex;
     $image_path = $dir . $new_image_name;
 
-    if (!move_uploaded_file($tmp_name, $image_path)) {
-        throw new Exception('Failed to move uploaded file to destination directory.');
+    // Attempt standard local filesystem upload
+    $moved = @move_uploaded_file($tmp_name, $image_path);
+    if ($moved) {
+        return $image_path;
     }
 
-    return $image_path;
+    // Serverless fallback: if filesystem is read-only (e.g. Vercel), encode as Base64 Data URI
+    $fileData = @file_get_contents($tmp_name);
+    if ($fileData !== false && strlen($fileData) > 0) {
+        $mime = 'image/' . ($image_lowercase_ex === 'jpg' ? 'jpeg' : $image_lowercase_ex);
+        return 'data:' . $mime . ';base64,' . base64_encode($fileData);
+    }
+
+    throw new Exception('Failed to save uploaded image. Please try again.');
 }

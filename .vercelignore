@@ -1,0 +1,10 @@
+# Vercel Deployment Ignore List
+.git
+.gitignore
+.vscode
+.idea
+*.log
+*.tmp
+assets/images/PI-*
+assets/images/EI-*
+
